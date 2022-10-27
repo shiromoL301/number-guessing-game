@@ -1,3 +1,4 @@
+import config
 import numpy as np
 
 I4 = np.eye(4, dtype = int)
@@ -58,10 +59,14 @@ def main():
             break
 
 
-L = [[] for _ in range(7)]
-for key in dic.keys():
-    for i in range(7):
-        if dic[key][i]:
-            L[i].append(key)
+def make_board():
+    name_dic = config.name_dic
+    L = [[] for _ in range(7)]
+    for key in dic.keys():
+        for i in range(7):
+            if dic[key][i]:
+                L[i].append(name_dic[key-1])
 
-[print(f"{i+1} 枚目 : {row}") for i, row in enumerate(L)]
+    [print(f"{i+1} 枚目 : {row}") for i, row in enumerate(L)]
+
+make_board()
