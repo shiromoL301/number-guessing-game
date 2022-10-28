@@ -1,3 +1,3 @@
 import genres
 
-name_dic = genres.kimetsu
+name_list = genres.kimetsu
