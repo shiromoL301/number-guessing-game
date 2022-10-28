@@ -15,7 +15,8 @@ G = np.hstack((I4,P))
 H = np.hstack((P.T, I3))
 
 
-dic = dict()
+code_dic = dict()
+inf_vec_dic = dict()
 for i in range(1,16):
     b = bin(i)[2:].zfill(4)
 
@@ -25,7 +26,8 @@ for i in range(1,16):
             s = s + G[loc]
             s = np.fmod(s,2)
 
-    dic[i] = s
+    code_dic[i] = s
+    inf_vec_dic[tuple(s)] = i
 
 def parity_check(r_code:np.array) -> np.array:
     syndrome = np.fmod(r_code@(H.T), 2)
@@ -39,12 +41,18 @@ def decode(r_code:np.array) -> np.array:
 
     return np.fmod(err_vec + r_code, 2)
 
+def which_animal(d_code:np.array) -> str:
+    name_list = config.name_list
+
+    return name_list[inf_vec_dic[tuple(d_code)]-1]
+
 def main():
     while True:
         r_code = np.array([int(input(f"{i}番目")) for i in range(1,8)])
 
         _ , err_vec, err_locs = parity_check(r_code)
         d_code = decode(r_code)
+        animal_name = which_animal(d_code)
         print("受信語")
         print(r_code)
         print("復号語")
@@ -52,6 +60,8 @@ def main():
         print("誤り位置")
         err_loc = f"{err_locs[0] + 1} 番目" if err_locs else "なし"
         print(err_loc)
+        print("あなたが思い浮かべていたのは・・・・・・？")
+        print(animal_name)
         print("続けますか？(y/n)")
 
         INPUT = input()
@@ -60,13 +70,14 @@ def main():
 
 
 def make_board():
-    name_dic = config.name_dic
+    name_list = config.name_list
     L = [[] for _ in range(7)]
-    for key in dic.keys():
+    for key in code_dic.keys():
         for i in range(7):
-            if dic[key][i]:
-                L[i].append(name_dic[key-1])
+            if code_dic[key][i] and (key-1) < len(name_list):
+                L[i].append(name_list[key-1])
 
     [print(f"{i+1} 枚目 : {row}") for i, row in enumerate(L)]
 
 make_board()
+main()
