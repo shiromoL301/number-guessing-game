@@ -3,10 +3,10 @@ from nptyping import NDArray, Shape, Int
 
 import json
 
-from src.config import genre, assets_path, genre_filename
+from src.config import assets_path, genre_filename
 
 class NumberGuessingCode:
-    def __init__(self):
+    def __init__(self, genre: str):
         # 単位行列
         I4 = np.eye(4, dtype=int)
         I3 = np.eye(3, dtype=int)
@@ -26,6 +26,9 @@ class NumberGuessingCode:
         # パリティ検査行列
         H = np.hstack((P.T, I3))
         self.__parity_check_matrix = H
+
+        # ジャンル
+        self.__genre = genre
 
         # 符号語
         self.num2codeword = dict()
@@ -69,6 +72,10 @@ class NumberGuessingCode:
     @property
     def parity_check_matrix(self) -> NDArray[Shape["3, 7"], Int]:
         return self.__parity_check_matrix
+
+    @property
+    def genre(self) -> str:
+        return self.__genre
 
     def parity_check(self, r_code: NDArray[Shape["1, 7"], Int]) -> tuple[NDArray[Shape["1, 3"], Int], NDArray[Shape["1, 7"], Int], list[int]]:
         """パリティ検査を行う

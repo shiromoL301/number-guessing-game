@@ -3,9 +3,15 @@ import numpy as np
 
 from src.utils import into_speech_bubble
 from src.code import NumberGuessingCode
+from src.config import genres
 
-C = NumberGuessingCode()
 while True:
+    print("以下からジャンルを1つ選んで，番号を入力してください:")
+    for i, genre in enumerate(genres):
+        print(f"{i}: {genre}")
+    genre_num = int(input())
+    print(f"選んだジャンル: {genres[genre_num]}")
+    C = NumberGuessingCode(genres[genre_num])
     r_code = np.array([int(input(f"{i}番目")) for i in range(1,8)])
     _, _, err_locs = C.parity_check(r_code)
     err_loc_str = f"{err_locs[0] + 1} 番目" if err_locs else "なし"
