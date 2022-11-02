@@ -14,4 +14,10 @@ pip install -r requirements.txt
 
 ## 遊び方
 
-(遊び方について書く)
+以下のコマンドを実行する：
+
+```terminal
+python main.py
+```
+
+※詳細な遊び方はイベント終了後に追記します
