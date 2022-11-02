@@ -3,7 +3,7 @@ from nptyping import NDArray, Shape, Int
 
 import json
 
-import config
+from src.config import genre, assets_path, genre_filename
 
 class NumberGuessingCode:
     def __init__(self):
@@ -21,20 +21,20 @@ class NumberGuessingCode:
 
         # 生成行列
         G = np.hstack((I4, P))
+        self.__generator_matrix = G
 
         # パリティ検査行列
         H = np.hstack((P.T, I3))
-
-        self.__generator_matrix = G
         self.__parity_check_matrix = H
+
         # 符号語
         self.num2codeword = dict()
         self.codeword2num = dict()
         self.denumerate_codewords()
 
-        with open(f"{config.assets_path}{config.genre_filename}") as f:
+        with open(f"{assets_path}{genre_filename}") as f:
             genres_dict = json.load(f)
-        self.character_names = genres_dict[config.genre]
+        self.character_names = genres_dict[genre]
 
     def __iter__(self):
         G = self.generator_matrix
@@ -70,7 +70,6 @@ class NumberGuessingCode:
     def parity_check_matrix(self) -> NDArray[Shape["3, 7"], Int]:
         return self.__parity_check_matrix
 
-    # 関数を定義する
     def parity_check(self, r_code: NDArray[Shape["1, 7"], Int]) -> tuple[NDArray[Shape["1, 3"], Int], NDArray[Shape["1, 7"], Int], list[int]]:
         """パリティ検査を行う
 
@@ -87,7 +86,6 @@ class NumberGuessingCode:
 
         return (syndrome, err_vec, err_locs)
 
-
     def decode(self, r_code: NDArray[Shape["1, 7"], Int]) -> NDArray[Shape["1, 7"], Int]:
         """受信語を復号する
 
@@ -101,7 +99,6 @@ class NumberGuessingCode:
 
         return np.fmod(err_vec + r_code, 2)
 
-
     def codeword_to_character(self, codeword: NDArray[Shape["1, 7"], Int]) -> str:
         """符号語からキャラクター名を取得する
 
@@ -113,7 +110,12 @@ class NumberGuessingCode:
         """
         return self.character_names[self.codeword2num[tuple(codeword)]-1]
 
-    def denumerate_codewords(self):
+    def denumerate_codewords(self) -> tuple[dict, dict]:
+        """符号語を生成し、番号づける
+
+        Returns:
+            tuple[dict, dict]: 番号->符号語の辞書、符号語->番号の辞書
+        """
         G = self.generator_matrix
         for i in range(1, len(self)):
             b = bin(i)[2:].zfill(4)
@@ -128,7 +130,7 @@ class NumberGuessingCode:
             self.codeword2num[tuple(s)] = i
         return (self.num2codeword, self.codeword2num)
 
-    def make_board(self):
+    def make_board(self) -> None:
         L = [[] for _ in range(7)]
         for key in self.num2codeword.keys():
             for i in range(7):

@@ -2,4 +2,3 @@
 genre = "youtuber"
 assets_path = "assets/"
 genre_filename = "genres.json"
-
