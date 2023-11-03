@@ -1,5 +1,5 @@
 import numpy as np
-from nptyping import NDArray, Shape, Int
+# from nptyping import NDArray, Shape, Int
 
 import json
 
@@ -66,18 +66,18 @@ class NumberGuessingCode:
         return 7
 
     @property
-    def generator_matrix(self) -> NDArray[Shape["4, 7"], Int]:
+    def generator_matrix(self) -> 'NDArray[Shape["4, 7"], Int]':
         return self.__generator_matrix
 
     @property
-    def parity_check_matrix(self) -> NDArray[Shape["3, 7"], Int]:
+    def parity_check_matrix(self) -> 'NDArray[Shape["3, 7"], Int]':
         return self.__parity_check_matrix
 
     @property
     def genre(self) -> str:
         return self.__genre
 
-    def parity_check(self, r_code: NDArray[Shape["1, 7"], Int]) -> tuple[NDArray[Shape["1, 3"], Int], NDArray[Shape["1, 7"], Int], list[int]]:
+    def parity_check(self, r_code: 'NDArray[Shape["1, 7"], Int]') -> 'tuple[NDArray[Shape["1, 3"], Int], NDArray[Shape["1, 7"], Int], list[int]]':
         """パリティ検査を行う
 
         Args:
@@ -93,7 +93,7 @@ class NumberGuessingCode:
 
         return (syndrome, err_vec, err_locs)
 
-    def decode(self, r_code: NDArray[Shape["1, 7"], Int]) -> NDArray[Shape["1, 7"], Int]:
+    def decode(self, r_code: 'NDArray[Shape["1, 7"], Int]') -> 'NDArray[Shape["1, 7"], Int]':
         """受信語を復号する
 
         Args:
@@ -106,7 +106,7 @@ class NumberGuessingCode:
 
         return np.fmod(err_vec + r_code, 2)
 
-    def codeword_to_character(self, codeword: NDArray[Shape["1, 7"], Int]) -> str:
+    def codeword_to_character(self, codeword: 'NDArray[Shape["1, 7"], Int]') -> str:
         """符号語からキャラクター名を取得する
 
         Args:
@@ -115,9 +115,12 @@ class NumberGuessingCode:
         Returns:
             str: キャラクター名
         """
-        return self.character_names[self.codeword2num[tuple(codeword)]-1]
+        try:
+            return self.character_names[self.codeword2num[tuple(codeword)]-1]
+        except KeyError:
+            return "2回以上嘘をつきましたね！"
 
-    def denumerate_codewords(self) -> tuple[dict, dict]:
+    def denumerate_codewords(self) -> 'tuple[dict, dict]':
         """符号語を生成し、番号づける
 
         Returns:
