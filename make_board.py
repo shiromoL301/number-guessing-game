@@ -6,5 +6,6 @@ from src.config import genres
 
 
 #config.pyとgenres.json
-C = NumberGuessingCode(genres[4])
+print(genres)
+C = NumberGuessingCode(genres[8])
 C.make_board()

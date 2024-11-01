@@ -7,7 +7,9 @@ genres = [
     "konan",
     "spinda",
     "fruits",
-    "onepeace"
+    "onepeace",
+    "pokemon_sv",
+    "tiikawa"
 ]
 assets_path = "assets/"
 genre_filename = "genres.json"
